@@ -74,7 +74,7 @@ Pokud tak neučiní a menšina zůstane na staré kódové základně, může do
 
 ==Poděkování==
 
-Děkuji Gregorymu Maxwellovi za návrh tohoto řešení a Mikeu Hearnovi za postřehy o vývoji webů. Také děkuji "ditto-b" na githubu za implementaci prototypu v předstihu.
+Děkuji Gregorymu Maxwellovi za návrh tohoto řešení a Mikeu Hearnovi za postřehy o vývoji webů. Také děkuji "ditto-b" na githubu za včasnou implementaci prototypu.
 
 ==Copyright==
 
