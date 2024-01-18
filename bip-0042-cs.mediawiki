@@ -1,0 +1,82 @@
+<pre>
+  BIP: 42
+  Vrstva: Konsensus (měkké rozvětvení)
+  Titulek: Konečná monetární zásoba v Bitcoinu
+  Autor: Pieter Wuille <pieter.wuille@gmail.com>
+  Comments-Summary: Unanimously Recommended for implementation
+  Comments-URI: https://github.com/bitcoin/bips/wiki/Comments:BIP-0042
+  Status: Konečný
+  Typ: Podle standardů
+  Vytvořeno: 2014-04-01
+  Licence: PD
+</pre>
+
+==Abstrakt==
+
+Ačkoliv se má všeobecně za to, že Satoshi byl inflaci nesnášející goldbug, on to o sobě nikdy netvrdil a ve skutečnosti naprogramoval peněžní zásobu Bitcoinu jako nekonečnou. Namodeloval ji tak, jako by byly každé mibilenium (1024 let) objeveny ve stejných intervalech 4 zlaté doly, k jejiž vyčerpání by docházelo do 140 let. 
+
+This poses obvious problems, however. Prominent among them is the discussion on what to call 1 billion Bitcoin, which symbol color to use for it, and when wallet clients should switch to it by default.
+Toto však přináší mnoho zjevných problému. Mezi nimi vyniká diskuze o tom, jak nazvat 1 miliardu bitcoinů, jakou barvu má mít její symbol a kdy by na ni měli klienti peněženek standardně přejít.
+
+Tento dokument navrhuje kontroverzní změnu: učinit peněžní zásobu Bitcoinu konečnou.
+
+==Detaily==
+
+Jak je známo, Satoshi byl mistrem programování, jehož znalosti jazyka C++ předčila pouze znalost japonské kultury. Níže uvedený kód:
+
+    int64_t nSubsidy = 50 * COIN;
+    // Subsidy is cut in half every 210,000 blocks
+    // which will occur approximately every 4 years.
+    nSubsidy >>= (nHeight / 210000);
+
+je pečlivě napsán tak, aby se spoléhal na nedefinované chování ve specifikaci C++ - možná proto, aby mohl být v budoucnu hardwarově akcelerován.
+
+Číslo bloku se vydělí 210000 ("zdánlivý" interval půlení dotace v blocích) a výsledek se použije jako vstup pro binární posun, který se aplikuje na původní výplatu (50 BTC) vyjádřenou v základních jednotkách. Díky tomu, že interval nového zlatého dolu je přesně 64krát větší než interval půlení a 64 je velikost datového typu měny v bitech, cyklus se opakuje každých 64 půlení na všech aktuálně podporovaných platformách.
+
+Rádi bychom - šikovnému předvádění zákeřných programátorských dovedností navzdory - aby byl Bitcoin dobře specifikovaný. Jinak nás zjevně čeká krkolomná jízda:
+
+<img src="bip-0042/inflation.png"></img>
+
+Všimněte si, že některé jiné programovací jazyky toto chování nevykazují, takže nové implementace budou pravděpodobně pomalejší a obecně podloudnější než Bitcoin Core. Například Python neočekávaně vrací 0 při posunu celého čísla nad jeho velikost.
+
+==Jiná řešení==
+
+===Aproximace s plovoucí desetinnou čárkou===
+
+Zřejmým řešením by bylo znovu zavést tvar dotační křivky pomocí aproximací s pohyblivou řádovou čárkou, jako je simulované žíhání nebo kvantitativní uvolňování, které se již osvědčily v konsensuálních systémech. Bohužel od finanční krize všichni považují čísla s desetinnou čárkou za podezřelá a celá čísla nejsou v Javascriptu dobře podporována. 
+
+===Zakrácení===
+
+Alternativním řešením by bylo reprezentovat celkový počet bitcoinů jako řetězec:
+
+    "21000000000000000000000"
+
+a pak pomocí manipulace s řetězcem odstranit pravou nulu každé 4 roky, plus minus jeden přestupný rok:
+
+    strSubsidy = strSubsidy.substr(0, strSubsidy.size() - 2);
+
+Tento styl se méně spoléhá na chytrý jazyk C++ a je více známý týmu Core Dev, což jsou převážně PHP programátoři.
+
+==Návrh==
+
+Co kdybychom raději přestali přemýšlet o dlouhodobých problémech, nastavších až budeme všichni mrtví (pokud se nepřiblížíme k cestování téměř světelnou rychlostí, kryogennímu oživování nebo jiné technologii - jako např. kryptoměna - které existují pouze ve sci-fi).
+
+Dne 1. dubna 2214 dojde k měkkému rozvětvení (softfork) (viz BIP16, BIP34, BIP62), čímž se dotace trvale vynuluje. Výsledkem bude, že celková nabídka měny bude omezena na 42 půlmilionů (včetně výstuupu genesis mincetvorné transakce, kterou ve skutečnosti nelze utratit).
+
+==Implementace==
+
+Implementaci referenčního klienta naleznete na adrese https://github.com/bitcoin/bitcoin/pull/3842 .
+
+==Kompatibilita==
+
+Vzhledem ke střednímu časovému rámci, v němž má být tato změna implementována, očekáváme, že se všichni těžaři rozhodnou vykašlat se na to nasadit ji před rokem 2214.
+
+Pokud tak neučiní a menšina zůstane na staré kódové základně, může dojít k rozvětvení. V podstatě budou po této době těžit zlato bláznů.
+
+==Poděkování==
+
+Děkuji Gregorymu Maxwellovi za návrh tohoto řešení a Mikeu Hearnovi za postřehy o vývoji webů. Také děkuji "ditto-b" na githubu za implementaci prototypu v předstihu.
+
+==Copyright==
+
+Tento dokument je veřejným vlastnictvím. 
