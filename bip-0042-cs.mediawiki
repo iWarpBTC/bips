@@ -15,7 +15,6 @@
 
 Ačkoliv se má všeobecně za to, že Satoshi byl inflaci nesnášející goldbug, on to o sobě nikdy netvrdil a ve skutečnosti naprogramoval peněžní zásobu Bitcoinu jako nekonečnou. Namodeloval ji tak, jako by byly každé mibilenium (1024 let) objeveny ve stejných intervalech 4 zlaté doly, k jejiž vyčerpání by docházelo do 140 let. 
 
-This poses obvious problems, however. Prominent among them is the discussion on what to call 1 billion Bitcoin, which symbol color to use for it, and when wallet clients should switch to it by default.
 Toto však přináší mnoho zjevných problému. Mezi nimi vyniká diskuze o tom, jak nazvat 1 miliardu bitcoinů, jakou barvu má mít její symbol a kdy by na ni měli klienti peněženek standardně přejít.
 
 Tento dokument navrhuje kontroverzní změnu: učinit peněžní zásobu Bitcoinu konečnou.
